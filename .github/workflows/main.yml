@@ -1,0 +1,22 @@
+name: PR Merge Notification
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v3
+
+    - name: Check if PR is merged
+      if: github.event.pull_request.merged == true
+      run: echo "The pull request was merged."
+
+    - name: Send Notification
+      if: github.event.pull_request.merged == true
+      run: |
+        curl -X POST -H 'Content-type: application/json' --data '{"text":"A pull request has been merged: ${{ github.event.pull_request.html_url }}"}' https://d9mrrcs0-8000.inc1.devtunnels.ms/webhook
